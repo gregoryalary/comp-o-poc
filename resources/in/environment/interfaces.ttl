@@ -1,0 +1,83 @@
+@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:            <https://w3id.org/saref#> .
+@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base                     <https://www.irit.fr/ambiantcompo/environment> .
+
+# Int in/out interface
+
+:int-int-interface
+    rdf:type          comp-o:ServiceProfileInterface ;
+    profile:hasInput  :int-int-interface-input ;
+    profile:hasOutput :int-int-interface-output .
+
+:int-int-interface-input
+    rdf:type              process:Input ;
+    process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .
+
+:int-int-interface-output
+    rdf:type              process:Output ;
+    process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .
+
+# An interface that takes anything as an input
+
+:any-interface
+    rdf:type         comp-o:ServiceProfileInterface ;
+    profile:hasInput :any-interface-input .
+
+:any-interface-input
+    rdf:type              process:Input ;
+    process:parameterType "http://www.w3.org/2002/07/owl#Thing" .
+
+# Interface that takes a non negative integer
+
+:int-interface
+    rdf:type         comp-o:ServiceProfileInterface ;
+    profile:hasInput :int-interface-input .
+
+:int-interface-input
+    rdf:type              process:Input ;
+    process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .
+
+# ON/OFF Input interface
+
+:on-off-interface
+    rdf:type         comp-o:ServiceProfileInterface ;
+    profile:hasInput :on-off-interface-input .
+
+:on-off-interface-input
+    rdf:type              process:Input ;
+    process:parameterType "https://www.irit.fr/ambiantcompo/ontology#OnOrOffState" .
+
+# ON Input interface
+
+:on-interface
+    rdf:type         comp-o:ServiceProfileInterface ;
+    profile:hasInput :on-interface-input .
+
+:on-interface-input
+    rdf:type              process:Input ;
+    process:parameterType "https://w3id.org/saref#OnState" .
+
+# Positive int interface
+
+:positive-int-interface
+    rdf:type                comp-o:ServiceProfileInterface ;
+    profile:hasInput        :positive-int-interface-input ;
+    profile:hasPrecondition :positive-int-interface-precondition .
+
+:positive-int-interface-precondition
+    rdf:type                expr:KIF-Condition ;
+    expr:variableBinding    [ rdf:type        expr:VariableBinding ;
+                              expr:theVariable "input"  ;
+                              expr:theObject :positive-int-interface-input ] ;
+    expr:expressionData     ">= ?input 0" .
+
+:positive-int-interface-input
+    rdf:type              process:Input ;
+    process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .

@@ -1,0 +1,52 @@
+@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:            <https://w3id.org/saref#> .
+@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base                     <https://www.irit.fr/ambiantcompo/environment> .
+
+:duplicator-process
+    rdf:type           process:CompositeProcess ;
+    process:composedOf :duplicator-process-split ;
+    process:hasInput   :duplicator-input .
+
+:duplicator-process-split
+    rdf:type           process:Split ;
+    process:hasInput   :duplicator-input ;
+    process:components [ rdf:type       process:ControlConstructBag ;
+                         owl-list:first :duplicator-process-perform-1 ;
+                         owl-list:rest  [ rdf:type       process:ControlConstructBag ;
+                                          owl-list:first :duplicator-process-perform-2 ;
+                                          owl-list:rest  owl-list:nil ] ] .
+
+:duplicator-input
+    rdf:type              process:Input ;
+    process:parameterType "http://www.w3.org/2002/07/owl#Thing" .
+
+:duplicator-process-perform-1
+    rdf:type                           comp-o:ComposablePerform ;
+    comp-o:requiredInterface :any-interface ;
+    process:hasDataFrom                [ rdf:type            process:InputBinding ;
+                                         process:valueSource [ rdf:type       process:ValueOf ;
+                                                               process:theVar :duplicator-input ] ;
+                                         process:toParam     :any-interface-input ] .
+
+:duplicator-process-perform-2
+    rdf:type                           comp-o:ComposablePerform ;
+    comp-o:requiredInterface :any-interface ;
+    process:hasDataFrom                [ rdf:type            process:InputBinding ;
+                                         process:valueSource [ rdf:type       process:ValueOf ;
+                                                               process:theVar :duplicator-input ] ;
+                                         process:toParam     :any-interface-input ] .
+
+:duplicator-profile
+    rdf:type            profile:Profile ;
+    profile:has_process :duplicator-process .
+
+:duplicator-service
+    rdf:type         comp-o:ComposableService ;
+    service:presents :duplicator-profile .

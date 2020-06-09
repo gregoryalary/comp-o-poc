@@ -1,0 +1,45 @@
+@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:            <https://w3id.org/saref#> .
+@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base                     <https://www.irit.fr/ambiantcompo/environment> .
+
+:lamp-service
+    rdf:type         service:Service ;
+    service:presents :lamp-profile .
+
+:lamp-profile
+    rdf:type            profile:Profile ;
+    profile:serviceName "Lamp service" ;
+    profile:hasInput    :lamp-input ;
+    profile:has_process :lamp-process .
+
+:lamp-input
+    rdf:type              process:Input ;
+    process:parameterType "https://w3id.org/saref#OnOffState" .
+
+:lamp-process
+    rdf:type          process:AtomicProcess ;
+    process:hasLocal  :lamp-state ;
+    process:hasInput  :lamp-input ;
+    process:hasResult :lamp-process-result .
+
+:lamp-process-effect
+    rdf:type             expr:KIF-Condition ;
+    expr:variableBinding :lamp-state-binding, :lamp-input-binding ;
+    expr:expressionBody  "current-value ?state ?input" .
+
+:lamp-state-binding
+    rdf:type         expr:VariableBinding ;
+    expr:theObject   :lamp-state ;
+    expr:theVariable "state" .
+
+:lamp-input-binding
+    rdf:type         expr:VariableBinding ;
+    expr:theObject   :lamp-input ;
+    expr:theVariable "input" .

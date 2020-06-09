@@ -1,0 +1,67 @@
+@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:            <https://w3id.org/saref#> .
+@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base                     <https://www.irit.fr/ambiantcompo/environment> .
+
+:converter-service
+    rdf:type         comp-o:ComposableService ;
+    service:presents :converter-profile .
+
+:converter-profile
+    rdf:type            service:Profile ;
+    profile:serviceName "Converter service"@en ;
+    profile:hasInput    :converter-input ;
+    profile:has_process :converter-process .
+
+:converter-input
+    rdf:type              process:Input ;
+    process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .
+
+:converter-process
+    rdf:type           process:CompositeProcess ;
+    process:composedOf :converter-process-if ;
+    process:hasInput   :converter-input .
+
+:converter-process-if
+    rdf:type            process:If-Then-Else ;
+    process:ifCondition [ rdf:type             expr:KIF-Expression ;
+                          expr:variableBinding [ rdf:type         expr:VariableBinding ;
+                                                 expr:theObject   :converter-input ;
+                                                 expr:theVariable "input" ] ;
+                          expr:expressionBody  ">= ?input 50" ] ;
+    process:then        [ rdf:type           process:Sequence ;
+                          process:components :converter-process-sequence-then-components ] ;
+    process:else        [ rdf:type           process:Sequence ;
+                          process:components :converter-process-sequence-else-components ] .
+
+:converter-process-sequence-then-components
+    rdf:type       process:ComponentList ;
+    owl-list:first :converter-perform-on ;
+    owl-list:rest  owl-list:nil .
+
+:converter-process-sequence-else-components
+    rdf:type       process:ComponentList ;
+    owl-list:first :converter-perform-off ;
+    owl-list:rest  owl-list:nil .
+
+:converter-perform-on
+    rdf:type                           comp-o:ComposablePerform ;
+    comp-o:requiredInterface :on-off-interface ;
+    process:hasDataFrom                [ rdf:type          process:InputBinding ;
+                                         process:valueData """<stub>ON</stub>""" ;
+# STUB should be valid XML
+                                         process:toParam   :on-off-interface-input ] .
+
+:converter-perform-off
+    rdf:type                           comp-o:ComposablePerform ;
+    comp-o:requiredInterface :on-off-interface ;
+    process:hasDataFrom                [ rdf:type          process:InputBinding ;
+                                         process:valueData """<stub>OFF</stub>""" ;
+# STUB should be valid XML
+                                         process:toParam   :on-off-interface-input ] .

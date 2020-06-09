@@ -1,0 +1,47 @@
+@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:            <https://w3id.org/saref#> .
+@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base                     <https://www.irit.fr/ambiantcompo/environment> .
+
+:plus-one-service
+    rdf:type service:Service ;
+    service:presents :plus-one-service-profile .
+
+:plus-one-service-profile
+    rdf:type profile:Profile ;
+    profile:hasInput :plus-one-service-input ;
+    profile:hasOutput :plus-one-service-output ;
+    profile:has_process :plus-one-service-process .
+
+:plus-one-service-input
+    rdf:type              process:Input ;
+    process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .
+
+:plus-one-service-output
+    rdf:type              process:Output ;
+    process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .
+
+:plus-one-service-process
+    rdf:type process:AtomicProcess ;
+    process:hasInput :plus-one-service-input ;
+    process:hasOutput :plus-one-service-output ;
+    process:hasResult :plus-one-service-result .
+
+:plus-one-service-result
+    rdf:type           process:Result ;
+    process:withOutput [ rdf:type              process:OutputBinding ;
+                         process:toParam       :plus-one-service-output ;
+                         process:valueFunction """<drs:term_function rdf:resource=\"&arith;#inc\"/>
+                                                <drs:term_args rdf:parseType=\"Collection\">
+                                                    <process:valueOf>
+                                                        <process:theParam rdf:resource=\"https://www.irit.fr/ambiantcompo/environment#plus-one-service-input\"/>
+                                                        <process:fromProcess rdf:resource=\"https://www.irit.fr/ambiantcompo/environment#plus-one-service-process\"/>
+                                                    </process:valueOf>
+                                                </drs:term_args>
+                                            </drs:Functional_term>"""^^rdf:XMLLiteral ] .

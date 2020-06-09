@@ -1,0 +1,45 @@
+@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:            <https://w3id.org/saref#> .
+@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base                     <https://www.irit.fr/ambiantcompo/environment> .
+
+:slider-service
+    rdf:type         comp-o:ComposableService ;
+    service:presents :slider-profile .
+
+:slider-profile
+    rdf:type            profile:Profile ;
+    profile:has_process :slider-process ;
+    profile:serviceName "Basic numerical slider"@en .
+
+:slider-process
+    rdf:type           process:CompositeProcess ;
+    process:composedOf :slider-process-sequence ;
+    process:hasLocal   :slider-value .
+
+:slider-value
+    rdf:type              process:Local ;
+    process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .
+
+:slider-process-sequence
+    rdf:type           process:Sequence ;
+    process:components :slider-process-sequence-list .
+
+:slider-process-sequence-list
+    rdf:type       process:ControlConstructList ;
+    owl-list:first :slider-process-sequence-composable-perform ;
+    owl-list:rest  owl-list:nil .
+
+:slider-process-sequence-composable-perform
+    rdf:type                           comp-o:ComposablePerform ;
+    comp-o:requiredInterface :int-interface ;
+    process:hasDataFrom                [ rdf:type            process:InputBinding ;
+                                         process:valueSource [ rdf:type       process:ValueOf ;
+                                                               process:theVar :slider-value ] ;
+                                         process:toParam     :converter-input ] .

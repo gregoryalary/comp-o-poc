@@ -1,0 +1,45 @@
+@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:            <https://w3id.org/saref#> .
+@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base                     <https://www.irit.fr/ambiantcompo/environment> .
+
+:screen-service
+    rdf:type         service:Service ;
+    service:presents :screen-profile .
+
+:screen-profile
+    rdf:type            profile:Profile ;
+    profile:serviceName "Screen service" ;
+    profile:has_process :screen-process ;
+    profile:hasInput    :screen-input .
+
+:screen-process
+    rdf:type          process:AtomicProcess ;
+    process:hasLocal  :screen-state ;
+    process:hasInput  :screen-input ;
+    process:hasResult :screen-process-result .
+
+:screen-input
+    rdf:type              process:Input ;
+    process:parameterType "https://w3id.org/saref#OnOffState" .
+
+:screen-process-effect
+    rdf:type             expr:KIF-Condition ;
+    expr:variableBinding :screen-state-binding, :screen-input-binding ;
+    expr:expressionBody  "current-value ?state ?input" .
+
+:screen-state-binding
+    rdf:type         expr:VariableBinding ;
+    expr:theObject   :screen-state ;
+    expr:theVariable "state" .
+
+:screen-input-binding
+    rdf:type         expr:VariableBinding ;
+    expr:theObject   :screen-input ;
+    expr:theVariable "input" .

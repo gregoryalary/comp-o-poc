@@ -1,0 +1,35 @@
+@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:            <https://w3id.org/saref#> .
+@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base                     <https://www.irit.fr/ambiantcompo/environment> .
+
+:negative-service
+    rdf:type         service:Service ;
+    service:presents :negative-service-profile .
+
+:negative-service-profile
+    rdf:type            profile:Profile ;
+    profile:hasInput    :negative-service-input ;
+    profile:hasPrecondition :negative-service-precondition ;
+    profile:has_process :negative-service-process .
+
+:negative-service-precondition
+    rdf:type             expr:KIF-Condition ;
+    expr:variableBinding [ rdf:type         expr:VariableBinding ;
+                           expr:theObject   :negative-service-input ;
+                           expr:theVariable "input" ] ;
+    expr:expressionData  "< ?input 0" .
+
+:negative-service-input
+    rdf:type              process:Input ;
+    process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .
+
+:negative-service-process
+    rdf:type         process:AtomicProcess ;
+    process:hasInput :plus-one-service-input .

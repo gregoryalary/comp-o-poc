@@ -1,0 +1,47 @@
+@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:            <https://w3id.org/saref#> .
+@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base                     <https://www.irit.fr/ambiantcompo/environment> .
+
+:switch-process
+    rdf:type           process:CompositeProcess ;
+    process:composedOf :switch-process-sequence ;
+    process:hasLocal   :switch-value .
+
+:switch-value
+    rdf:type              process:Local ;
+    process:parameterType "https://w3id.org/saref#OnOffState" .
+
+:switch-process-sequence
+    rdf:type           process:Sequence ;
+    process:components :switch-process-sequence-list .
+
+:switch-process-sequence-list
+    rdf:type       process:ControlConstructList ;
+    owl-list:first :switch-process-sequence-composable-perform ;
+    owl-list:rest  owl-list:nil .
+
+:switch-process-sequence-composable-perform
+    rdf:type                           comp-o:ComposablePerform ;
+    comp-o:requiredInterface :on-off-interface ;
+    process:hasDataFrom                [ rdf:type            process:InputBinding ;
+                                         process:valueSource [ rdf:type            process:ValueOf ;
+                                                               process:theVar      :switch-value ;
+                                                               process:fromProcess :switch-process ] ;
+                                         process:toParam     :on-off-interface-input ] .
+
+:switch-profile
+    rdf:type            profile:Profile ;
+    profile:has_process :switch-process ;
+    profile:serviceName "Switch ON/OFF"@en .
+
+
+:switch-service
+    rdf:type         comp-o:ComposableService ;
+    service:presents :switch-profile .

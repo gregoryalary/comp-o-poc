@@ -1,0 +1,75 @@
+@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:            <https://w3id.org/saref#> .
+@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base                     <https://www.irit.fr/ambiantcompo/environment> .
+
+:two-int-operation-service
+    rdf:type         comp-o:ComposableService ;
+    service:presents :two-int-operation-profile .
+
+:two-int-operation-profile
+    rdf:type            profile:Profile ;
+    profile:serviceName "Two times int operation service" ;
+    profile:hasInput    :two-int-operation-input ;
+    profile:has_process :two-int-operation-process .
+
+:two-int-operation-input
+    rdf:type              process:Input ;
+    process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .
+
+:two-int-operation-output
+    rdf:type              process:Output ;
+    process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .
+
+:two-int-operation-process
+    rdf:type           process:CompositeProcess ;
+    process:composedOf :two-int-operation-sequence ;
+    process:hasInput   :two-int-operation-input ;
+    process:hasOutput  :two-int-operation-output ;
+    process:hasResult  :two-int-result .
+
+:two-int-result
+    rdf:type           process:Result ;
+    process:withOutput [ rdf:type            process:OutputBinding ;
+                         process:toParam     :two-int-operation-output ;
+                         process:valueSource [ rdf:type            process:ValueOf ;
+                                               process:theVar      :int-int-interface-output ;
+                                               process:fromProcess :two-int-operation-compose-second ] ] .
+
+:two-int-operation-sequence
+    rdf:type           process:Sequence ;
+    process:components :two-int-operation-sequence-first .
+
+:two-int-operation-sequence-first
+    rdf:type       process:ControlConstructList ;
+    owl-list:first :two-int-operation-compose-first ;
+    owl-list:rest  :two-int-operation-sequence-second .
+
+:two-int-operation-sequence-second
+    rdf:type       process:ControlConstructList ;
+    owl-list:first :two-int-operation-compose-second ;
+    owl-list:rest  owl-list:nil .
+
+:two-int-operation-compose-first
+    rdf:type                           comp-o:ComposablePerform ;
+    comp-o:requiredInterface :int-int-interface ;
+    process:hasDataFrom                [ rdf:type            process:InputBinding ;
+                                         process:valueSource [ rdf:type            process:ValueOf ;
+                                                               process:theVar      :two-int-operation-input ;
+                                                               process:fromProcess :two-int-operation-process ] ;
+                                         process:toParam     :on-off-interface-input ] .
+
+:two-int-operation-compose-second
+    rdf:type                           comp-o:ComposablePerform ;
+    comp-o:requiredInterface :int-int-interface ;
+    process:hasDataFrom                [ rdf:type            process:InputBinding ;
+                                         process:valueSource [ rdf:type            process:ValueOf ;
+                                                               process:theVar      :int-int-interface-output ;
+                                                               process:fromProcess :two-int-operation-compose-first ] ;
+                                         process:toParam     :on-off-interface-input ] .

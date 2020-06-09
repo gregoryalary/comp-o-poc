@@ -1,0 +1,45 @@
+@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:            <https://w3id.org/saref#> .
+@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base                     <https://www.irit.fr/ambiantcompo/environment> .
+
+:positive-service
+    rdf:type         comp-o:ComposableService ;
+    service:presents :positive-service-profile .
+
+:positive-service-profile
+    rdf:type            profile:Profile ;
+    profile:has_process :positive-service-process ;
+    profile:serviceName "Basic numerical positive-service"@en .
+
+:positive-service-process
+    rdf:type           process:CompositeProcess ;
+    process:composedOf :positive-service-process-sequence ;
+    process:hasLocal   :positive-service-value .
+
+:positive-service-value
+    rdf:type              process:Local ;
+    process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .
+
+:positive-service-process-sequence
+    rdf:type           process:Sequence ;
+    process:components :positive-service-process-sequence-list .
+
+:positive-service-process-sequence-list
+    rdf:type       process:ControlConstructList ;
+    owl-list:first :positive-service-process-sequence-composable-perform ;
+    owl-list:rest  owl-list:nil .
+
+:positive-service-process-sequence-composable-perform
+    rdf:type                           comp-o:ComposablePerform ;
+    comp-o:requiredInterface :positive-int-interface ;
+    process:hasDataFrom                [ rdf:type            process:InputBinding ;
+                                         process:valueSource [ rdf:type       process:ValueOf ;
+                                                               process:theVar :positive-service-value ] ;
+                                         process:toParam     :positive-int-interface-input ] .
