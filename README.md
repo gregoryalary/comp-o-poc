@@ -1,4 +1,4 @@
-# Comp-O for assisted composite service building and automatic composite service descriptions generation
+# Comp-O for assisted composite service building and automatic generation composite service descriptions
 
 This repository contains a POC showing how we can use the [Comp-O](https://gregoryalary.github.io/comp-o/) ontology to assist developer in the building of composite services and to automatically generate theirs descriptions.
 
@@ -9,4 +9,4 @@ Several component-based service descriptions that can be used to test this POC a
 - Listing of the available services
 - Listing of the required interfaces of a component-based service
 - Check of the compatibility between a required interface and a service
-- Automatic generation of composite services descriptions
+- Automatic generation of composite service descriptions
