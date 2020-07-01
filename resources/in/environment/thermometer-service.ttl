@@ -1,0 +1,27 @@
+@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:            <https://w3id.org/saref#> .
+@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base                     <https://www.irit.fr/ambiantcompo/environment> .
+
+:thermometer-service
+    rdf:type service:Service ;
+    service:presents :thermometer-service-profile .
+
+:thermometer-service-profile
+    rdf:type profile:Profile ;
+    profile:hasOutput :thermometer-service-output ;
+    profile:has_process :thermometer-service-process .
+
+:thermometer-service-output
+    rdf:type              process:Output ;
+    process:parameterType "http://www.co-ode.org/ontologies/galen#Celsius" .
+
+:thermometer-service-process
+    rdf:type process:AtomicProcess ;
+    process:hasOutput :thermometer-service-output .

@@ -1,0 +1,70 @@
+@prefix :         <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:  <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:  <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:  <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o:   <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:     <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:    <https://w3id.org/saref#> .
+@prefix owl-list: <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base             <https://www.irit.fr/ambiantcompo/environment> .
+
+:ambiant-temperature-computer-service
+    rdf:type         comp-o:ComponentBasedService ;
+    service:presents :ambiant-temperature-computer-profile .
+
+:ambiant-temperature-computer-profile
+    rdf:type            profile:Profile ;
+    profile:serviceName "Ambiant temperature computer" ;
+    profile:hasOutput   :ambiant-temperature-computer-output ;
+    profile:has_process :ambiant-temperature-computer-process .
+
+:ambiant-temperature-computer-output
+    rdf:type              process:Output ;
+    process:parameterType "http://www.co-ode.org/ontologies/galen#Celsius" .
+
+:ambiant-temperature-computer-process
+    rdf:type           process:CompositeProcess ;
+    process:composedOf :ambiant-temperature-computer-sequence ;
+    process:hasOutput  :ambiant-temperature-computer-output ;
+    process:hasResult  :ambiant-temperature-computer-result .
+
+:ambiant-temperature-computer-result
+    rdf:type           process:Result ;
+    process:withOutput [ rdf:type            process:OutputBinding ;
+                         process:toParam     :ambiant-temperature-computer-output ;
+                         process:valueSource [ rdf:type            process:ValueOf ;
+                                               process:theVar      :wind-interface-output ;
+                                               process:fromProcess :ambiant-temperature-computer-compose-second ] ] .
+
+:ambiant-temperature-computer-sequence
+    rdf:type           process:Sequence ;
+    process:components :ambiant-temperature-computer-sequence-first .
+
+:ambiant-temperature-computer-sequence-first
+    rdf:type       process:ControlConstructList ;
+    owl-list:first :ambiant-temperature-computer-compose-first ;
+    owl-list:rest  :ambiant-temperature-computer-sequence-second .
+
+:ambiant-temperature-computer-sequence-second
+    rdf:type       process:ControlConstructList ;
+    owl-list:first :ambiant-temperature-computer-compose-second ;
+    owl-list:rest  owl-list:nil .
+
+:ambiant-temperature-computer-compose-first
+    rdf:type                       comp-o:RequiredPerform ;
+    comp-o:requiredPerformContract :celsius-interface ;
+    process:hasDataFrom            [ rdf:type            process:InputBinding ;
+                                     process:valueSource [ rdf:type            process:ValueOf ;
+                                                           process:theVar      :ambiant-temperature-computer-input ;
+                                                           process:fromProcess :ambiant-temperature-computer-process ] ;
+                                     process:toParam     :on-off-interface-input ] .
+
+:ambiant-temperature-computer-compose-second
+    rdf:type                       comp-o:RequiredPerform ;
+    comp-o:requiredPerformContract :wind-interface ;
+    process:hasDataFrom            [ rdf:type            process:InputBinding ;
+                                     process:valueSource [ rdf:type            process:ValueOf ;
+                                                           process:theVar      :celsius-interface-output ;
+                                                           process:fromProcess :ambiant-temperature-computer-compose-first ] ;
+                                     process:toParam     :on-off-interface-input ] .

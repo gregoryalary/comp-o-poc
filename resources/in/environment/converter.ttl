@@ -10,7 +10,7 @@
 @base                     <https://www.irit.fr/ambiantcompo/environment> .
 
 :converter-service
-    rdf:type         comp-o:ComposableService ;
+    rdf:type         comp-o:ComponentBasedService ;
     service:presents :converter-profile .
 
 :converter-profile
@@ -51,16 +51,16 @@
     owl-list:rest  owl-list:nil .
 
 :converter-perform-on
-    rdf:type                           comp-o:ComposablePerform ;
-    comp-o:requiredInterface :on-off-interface ;
+    rdf:type                           comp-o:RequiredPerform ;
+    comp-o:requiredPerformContract :on-off-interface ;
     process:hasDataFrom                [ rdf:type          process:InputBinding ;
                                          process:valueData """<stub>ON</stub>""" ;
 # STUB should be valid XML
                                          process:toParam   :on-off-interface-input ] .
 
 :converter-perform-off
-    rdf:type                           comp-o:ComposablePerform ;
-    comp-o:requiredInterface :on-off-interface ;
+    rdf:type                           comp-o:RequiredPerform ;
+    comp-o:requiredPerformContract :on-off-interface ;
     process:hasDataFrom                [ rdf:type          process:InputBinding ;
                                          process:valueData """<stub>OFF</stub>""" ;
 # STUB should be valid XML

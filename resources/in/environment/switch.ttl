@@ -28,8 +28,8 @@
     owl-list:rest  owl-list:nil .
 
 :switch-process-sequence-composable-perform
-    rdf:type                           comp-o:ComposablePerform ;
-    comp-o:requiredInterface :on-off-interface ;
+    rdf:type                           comp-o:RequiredPerform ;
+    comp-o:requiredPerformContract :on-off-interface ;
     process:hasDataFrom                [ rdf:type            process:InputBinding ;
                                          process:valueSource [ rdf:type            process:ValueOf ;
                                                                process:theVar      :switch-value ;
@@ -43,5 +43,5 @@
 
 
 :switch-service
-    rdf:type         comp-o:ComposableService ;
+    rdf:type         comp-o:ComponentBasedService ;
     service:presents :switch-profile .

@@ -28,8 +28,8 @@
     owl-list:rest  owl-list:nil .
 
 :switch-always-on-process-sequence-composable-perform
-    rdf:type                           comp-o:ComposablePerform ;
-    comp-o:requiredInterface :on-interface ;
+    rdf:type                           comp-o:RequiredPerform ;
+    comp-o:requiredPerformContract :on-interface ;
     process:hasDataFrom                [ rdf:type            process:InputBinding ;
                                          process:valueSource [ rdf:type            process:ValueOf ;
                                                                process:theVar      :switch-always-on-value ;
@@ -43,5 +43,5 @@
 
 
 :switch-always-on-service
-    rdf:type         comp-o:ComposableService ;
+    rdf:type         comp-o:ComponentBasedService ;
     service:presents :switch-always-on-profile .

@@ -4,16 +4,16 @@ import java.util.HashMap;
 
 public class ServiceBindings {
 
-    private ComposableService service;
+    private ComponentBasedService service;
 
     private HashMap<ComposablePerform, ComposablePerformBindings> bindings;
 
-    public ServiceBindings(ComposableService service, HashMap<ComposablePerform, ComposablePerformBindings> bindings) {
+    public ServiceBindings(ComponentBasedService service, HashMap<ComposablePerform, ComposablePerformBindings> bindings) {
         this.service = service;
         this.bindings = bindings;
     }
 
-    public ComposableService getService() {
+    public ComponentBasedService getService() {
         return service;
     }
 

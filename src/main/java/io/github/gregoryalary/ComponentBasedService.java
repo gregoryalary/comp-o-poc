@@ -6,7 +6,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class ComposableService extends Service {
+public class ComponentBasedService extends Service {
 
     private Collection<ComposablePerform> composablePerforms;
 
@@ -22,10 +22,10 @@ public class ComposableService extends Service {
             "SELECT ?instruction\n" +
             "WHERE {\n" +
                     "   <%s> service:presents/profile:has_process/process:composedOf/(process:then|process:else|process:whileProcess|process:untilProcess|process:components)*/(owl-list:rest*)/owl-list:first+ ?instruction .\n" +
-                    "  ?instruction a comp-o:ComposablePerform\n" +
+                    "  ?instruction a comp-o:RequiredPerform\n" +
             "}";
 
-    public ComposableService(Resource resource) {
+    public ComponentBasedService(Resource resource) {
         super(resource);
         this.reloadComposablePerforms();
     }

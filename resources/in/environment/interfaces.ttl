@@ -1,18 +1,18 @@
-@prefix :                 <https://www.irit.fr/ambiantcompo/environment#> .
-@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix process:          <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
-@prefix profile:          <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
-@prefix service:          <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
-@prefix comp-o: <https://gregoryalary.github.io/comp-o#> .
-@prefix expr:             <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
-@prefix saref:            <https://w3id.org/saref#> .
-@prefix owl-list:         <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
-@base                     <https://www.irit.fr/ambiantcompo/environment> .
+@prefix :         <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:  <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:  <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:  <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o:   <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:     <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:    <https://w3id.org/saref#> .
+@prefix owl-list: <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base             <https://www.irit.fr/ambiantcompo/environment> .
 
 # Int in/out interface
 
 :int-int-interface
-    rdf:type          comp-o:ServiceProfileInterface ;
+    rdf:type          comp-o:ServiceContract ;
     profile:hasInput  :int-int-interface-input ;
     profile:hasOutput :int-int-interface-output .
 
@@ -27,7 +27,7 @@
 # An interface that takes anything as an input
 
 :any-interface
-    rdf:type         comp-o:ServiceProfileInterface ;
+    rdf:type         comp-o:ServiceContract ;
     profile:hasInput :any-interface-input .
 
 :any-interface-input
@@ -37,7 +37,7 @@
 # Interface that takes a non negative integer
 
 :int-interface
-    rdf:type         comp-o:ServiceProfileInterface ;
+    rdf:type         comp-o:ServiceContract ;
     profile:hasInput :int-interface-input .
 
 :int-interface-input
@@ -47,7 +47,7 @@
 # ON/OFF Input interface
 
 :on-off-interface
-    rdf:type         comp-o:ServiceProfileInterface ;
+    rdf:type         comp-o:ServiceContract ;
     profile:hasInput :on-off-interface-input .
 
 :on-off-interface-input
@@ -57,7 +57,7 @@
 # ON Input interface
 
 :on-interface
-    rdf:type         comp-o:ServiceProfileInterface ;
+    rdf:type         comp-o:ServiceContract ;
     profile:hasInput :on-interface-input .
 
 :on-interface-input
@@ -67,17 +67,37 @@
 # Positive int interface
 
 :positive-int-interface
-    rdf:type                comp-o:ServiceProfileInterface ;
+    rdf:type                comp-o:ServiceContract ;
     profile:hasInput        :positive-int-interface-input ;
     profile:hasPrecondition :positive-int-interface-precondition .
 
 :positive-int-interface-precondition
-    rdf:type                expr:KIF-Condition ;
-    expr:variableBinding    [ rdf:type        expr:VariableBinding ;
-                              expr:theVariable "input"  ;
-                              expr:theObject :positive-int-interface-input ] ;
-    expr:expressionData     ">= ?input 0" .
+    rdf:type             expr:KIF-Condition ;
+    expr:variableBinding [ rdf:type         expr:VariableBinding ;
+                           expr:theVariable "input" ;
+                           expr:theObject   :positive-int-interface-input ] ;
+    expr:expressionData  ">= ?input 0" .
 
 :positive-int-interface-input
     rdf:type              process:Input ;
     process:parameterType "http://www.w3.org/2001/XMLSchema#Integer" .
+
+# Celsius interface
+
+:celsius-interface
+    rdf:type          comp-o:ServiceContract ;
+    profile:hasOutput :celsius-interface-input .
+
+:celsius-interface-input
+    rdf:type              process:Output ;
+    process:parameterType "http://www.co-ode.org/ontologies/galen#Celsius" .
+
+# Wind interface
+
+:wind-interface
+    rdf:type          comp-o:ServiceContract ;
+    profile:hasOutput :wind-interface-input .
+
+:wind-interface-input
+    rdf:type              process:Output ;
+    process:parameterType "http://purl.oclc.org/NET/ssnx/meteo/WM30#WindSpeed" .

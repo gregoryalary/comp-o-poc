@@ -1,0 +1,56 @@
+@prefix :         <https://www.irit.fr/ambiantcompo/environment#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix process:  <http://www.daml.org/services/owl-s/1.2/Process.owl#> .
+@prefix profile:  <http://www.daml.org/services/owl-s/1.2/Profile.owl#> .
+@prefix service:  <http://www.daml.org/services/owl-s/1.2/Service.owl#> .
+@prefix comp-o:   <https://gregoryalary.github.io/comp-o#> .
+@prefix expr:     <http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> .
+@prefix saref:    <https://w3id.org/saref#> .
+@prefix owl-list: <http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> .
+@base             <https://www.irit.fr/ambiantcompo/environment> .
+
+:cel-to-far-service
+    rdf:type         comp-o:ComponentBasedService ;
+    service:presents :cel-to-far-profile .
+
+:cel-to-far-profile
+    rdf:type            service:Profile ;
+    profile:serviceName "Celsius to Farenheit adapter"@en ;
+    profile:hasOutput   :cel-to-far-output ;
+    profile:has_process :cel-to-far-process .
+
+:cel-to-far-process
+    rdf:type           process:CompositeProcess ;
+    process:composedOf :cel-to-far-process-sequence ;
+    process:hasOutput  :cel-to-far-output ;
+    process:hasResult  :cel-to-far-service-result .
+
+:cel-to-far-output
+    rdf:type              process:Output ;
+    process:parameterType "http://www.co-ode.org/ontologies/galen#Fahrenheit".
+
+:cel-to-far-process-sequence
+    rdf:type           process:Sequence ;
+    process:components :cel-to-far-process-sequence-list .
+
+:cel-to-far-process-sequence-list
+    rdf:type       process:ControlConstructList ;
+    owl-list:first :cel-to-far-process-sequence-composable-perform ;
+    owl-list:rest  owl-list:nil . # There should be another step to actually compute the farenheit value
+                                  # This step here is skipped for the sake of simplicity
+
+:cel-to-far-process-sequence-composable-perform
+    rdf:type                 comp-o:RequiredPerform ;
+    comp-o:requiredPerformContract :celsius-interface ;
+    process:hasDataFrom      [ rdf:type            process:InputBinding ;
+                               process:valueSource [ rdf:type       process:ValueOf ;
+                                                     process:theVar :slider-value ] ;
+                               process:toParam     :converter-input ] .
+
+:cel-to-far-service-result
+    rdf:type           process:Result ;
+    process:withOutput [ rdf:type            process:OutputBinding ;
+                         process:toParam     :cel-to-far-output ;
+                         process:valueSource [ rdf:type            process:ValueOf ;
+                                               process:theVar      :celsius-interface-output ;
+                                               process:fromProcess :cel-to-far-process-sequence-composable-perform ] ] .

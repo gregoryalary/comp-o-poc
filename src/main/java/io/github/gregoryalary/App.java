@@ -8,7 +8,7 @@ public class App {
 
     private final static Scanner sc = new Scanner(System.in);
 
-    public static List<ServiceBindings> buildWholeComposition(ComposableService service, List<ServiceBindings> bindings) {
+    public static List<ServiceBindings> buildWholeComposition(ComponentBasedService service, List<ServiceBindings> bindings) {
         HashMap<ComposablePerform, ComposablePerformBindings> bindingsForThisService = new HashMap();
         // Print the composable performs
         Collection<ComposablePerform> cPerforms = service.getComposablePerforms();
@@ -41,8 +41,8 @@ public class App {
         bindings.add(new ServiceBindings(service, bindingsForThisService));
         service.setComposed(true);
         for (ComposablePerformBindings bindingsForThisPerform : bindingsForThisService.values()) {
-            if (bindingsForThisPerform.getService() instanceof ComposableService && !((ComposableService) bindingsForThisPerform.getService()).isComposed()) {
-                buildWholeComposition((ComposableService) bindingsForThisPerform.getService(), bindings);
+            if (bindingsForThisPerform.getService() instanceof ComponentBasedService && !((ComponentBasedService) bindingsForThisPerform.getService()).isComposed()) {
+                buildWholeComposition((ComponentBasedService) bindingsForThisPerform.getService(), bindings);
             }
         }
         return bindings;
@@ -52,15 +52,15 @@ public class App {
         ServiceEnvironment.getModel(); // force init
         OntologyWrapper.init(); // force init
         System.out.println("+------------ POC CLI ------------+\n");
-        ComposableService rootService = null;
+        ComponentBasedService rootService = null;
         do {
             System.out.print("Root service URI (component-based) : ");
             String rootServiceUri = sc.nextLine();
-            rootService = ServiceEnvironment.getComposableServices().stream().filter(
+            rootService = ServiceEnvironment.getComponentBasedServices().stream().filter(
                     (Service s) -> s.getURI().equals(BASE + rootServiceUri)
             ).findFirst().orElse(null);
             if (rootServiceUri.equals("???")) {
-                ServiceEnvironment.getComposableServices().parallelStream().forEach(s -> System.out.printf("\t- %s\n", s));
+                ServiceEnvironment.getComponentBasedServices().parallelStream().forEach(s -> System.out.printf("\t- %s\n", s));
             } else if (rootService == null) {
                 System.out.println("\t-> Could not find this service. Are you sure it is a component-based service ?");
             }
@@ -68,7 +68,7 @@ public class App {
         List<ServiceBindings> bindingList = buildWholeComposition(rootService, new LinkedList());
         String outFile = null;
         do {
-            System.out.print("\nWhere do you want to save the composite service ? : ");
+            System.out.print("\nWhere do you want to save the description of the composite service ? : ");
             outFile = sc.nextLine();
         } while (outFile == null);
         ServiceComposer.composeServices(bindingList, outFile);

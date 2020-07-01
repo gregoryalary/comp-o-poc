@@ -28,16 +28,16 @@
     process:parameterType "http://www.w3.org/2002/07/owl#Thing" .
 
 :duplicator-process-perform-1
-    rdf:type                           comp-o:ComposablePerform ;
-    comp-o:requiredInterface :any-interface ;
+    rdf:type                           comp-o:RequiredPerform ;
+    comp-o:requiredPerformContract :any-interface ;
     process:hasDataFrom                [ rdf:type            process:InputBinding ;
                                          process:valueSource [ rdf:type       process:ValueOf ;
                                                                process:theVar :duplicator-input ] ;
                                          process:toParam     :any-interface-input ] .
 
 :duplicator-process-perform-2
-    rdf:type                           comp-o:ComposablePerform ;
-    comp-o:requiredInterface :any-interface ;
+    rdf:type                           comp-o:RequiredPerform ;
+    comp-o:requiredPerformContract :any-interface ;
     process:hasDataFrom                [ rdf:type            process:InputBinding ;
                                          process:valueSource [ rdf:type       process:ValueOf ;
                                                                process:theVar :duplicator-input ] ;
@@ -48,5 +48,5 @@
     profile:has_process :duplicator-process .
 
 :duplicator-service
-    rdf:type         comp-o:ComposableService ;
+    rdf:type         comp-o:ComponentBasedService ;
     service:presents :duplicator-profile .

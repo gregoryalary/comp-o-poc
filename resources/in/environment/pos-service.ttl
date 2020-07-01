@@ -10,7 +10,7 @@
 @base                     <https://www.irit.fr/ambiantcompo/environment> .
 
 :positive-service
-    rdf:type         comp-o:ComposableService ;
+    rdf:type         comp-o:ComponentBasedService ;
     service:presents :positive-service-profile .
 
 :positive-service-profile
@@ -37,8 +37,8 @@
     owl-list:rest  owl-list:nil .
 
 :positive-service-process-sequence-composable-perform
-    rdf:type                           comp-o:ComposablePerform ;
-    comp-o:requiredInterface :positive-int-interface ;
+    rdf:type                           comp-o:RequiredPerform ;
+    comp-o:requiredPerformContract :positive-int-interface ;
     process:hasDataFrom                [ rdf:type            process:InputBinding ;
                                          process:valueSource [ rdf:type       process:ValueOf ;
                                                                process:theVar :positive-service-value ] ;

@@ -84,7 +84,7 @@ public class ServiceComposer {
         addMatchingInformation(bindings.getService(), bindings.getBindings(), model);
     }
 
-    private static void addMatchingInformation(ComposableService service, HashMap<ComposablePerform, ComposablePerformBindings> bindings, Model model) {
+    private static void addMatchingInformation(ComponentBasedService service, HashMap<ComposablePerform, ComposablePerformBindings> bindings, Model model) {
         addIsService(model, service);
         addBindings(model, bindings);
         updateVarReferences(model, bindings);
@@ -163,7 +163,7 @@ public class ServiceComposer {
         });
     }
 
-    private static void addIsService(Model model, ComposableService service) {
+    private static void addIsService(Model model, ComponentBasedService service) {
         model.add(ResourceFactory.createStatement(
                 model.getResource(toOpeResourceUri(ServiceEnvironment.getModel().getResource(service.getURI()))),
                 TYPE,

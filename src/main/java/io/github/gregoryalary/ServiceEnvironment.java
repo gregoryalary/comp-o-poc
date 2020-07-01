@@ -13,7 +13,7 @@ public class ServiceEnvironment {
 
     private static Model model;
 
-    private static Collection<ComposableService> composableServices = new LinkedList<>();
+    private static Collection<ComponentBasedService> componentBasedServices = new LinkedList<>();
     private static Collection<OperationalService> operationalServices = new LinkedList<>();
 
     public static Model getModel() {
@@ -38,15 +38,19 @@ public class ServiceEnvironment {
         model.read("./resources/in/environment/btn-always-on.ttl", "TURTLE");
         model.read("./resources/in/environment/plus-one.ttl", "TURTLE");
         model.read("./resources/in/environment/two-times-int-operation.ttl", "TURTLE");
+        model.read("./resources/in/environment/degree-to-farenheit.ttl", "TURTLE");
+        model.read("./resources/in/environment/ambiant-temperature-computer.ttl", "TURTLE");
+        model.read("./resources/in/environment/anenometer-service.ttl", "TURTLE");
+        model.read("./resources/in/environment/thermometer-service.ttl", "TURTLE");
         loadComposableServices();
         loadOperationalServices();
     }
 
-    public static Collection<ComposableService> getComposableServices() {
+    public static Collection<ComponentBasedService> getComponentBasedServices() {
         if (model == null) {
             ServiceEnvironment.loadModel();
         }
-        return composableServices;
+        return componentBasedServices;
     }
 
     public static Collection<OperationalService> getOperationalServices() {
@@ -61,17 +65,17 @@ public class ServiceEnvironment {
             ServiceEnvironment.loadModel();
         }
         List<Service> union = new LinkedList<>();
-        union.addAll(composableServices);
+        union.addAll(componentBasedServices);
         union.addAll(operationalServices);
         return union;
     }
 
     private static void loadComposableServices() {
-        composableServices = new LinkedList<>();
-        Query query = QueryFactory.create("SELECT ?service WHERE { ?service a <https://gregoryalary.github.io/comp-o#ComposableService> }");
+        componentBasedServices = new LinkedList<>();
+        Query query = QueryFactory.create("SELECT ?service WHERE { ?service a <https://gregoryalary.github.io/comp-o#ComponentBasedService> }");
         for (ResultSet results = QueryExecutionFactory.create(query, ServiceEnvironment.getModel()).execSelect(); results.hasNext(); ) {
             QuerySolution solution = results.nextSolution();
-            composableServices.add(new ComposableService(solution.getResource("?service")));
+            componentBasedServices.add(new ComponentBasedService(solution.getResource("?service")));
         }
     }
 
@@ -87,7 +91,7 @@ public class ServiceEnvironment {
                 "SELECT ?service\n" +
                         "WHERE {\n" +
                         "   ?service a <http://www.daml.org/services/owl-s/1.2/Service.owl#Service> .\n" +
-                         "   FILTER NOT EXISTS { ?service a <https://gregoryalary.github.io/comp-o#ComposableService> }" +
+                         "   FILTER NOT EXISTS { ?service a <https://gregoryalary.github.io/comp-o#ComponentBasedService> }" +
                         "}");
         for (ResultSet results = QueryExecutionFactory.create(query, ServiceEnvironment.getModel()).execSelect(); results.hasNext(); ) {
             QuerySolution solution = results.nextSolution();

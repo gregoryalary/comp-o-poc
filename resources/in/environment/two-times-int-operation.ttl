@@ -10,7 +10,7 @@
 @base                     <https://www.irit.fr/ambiantcompo/environment> .
 
 :two-int-operation-service
-    rdf:type         comp-o:ComposableService ;
+    rdf:type         comp-o:ComponentBasedService ;
     service:presents :two-int-operation-profile .
 
 :two-int-operation-profile
@@ -57,8 +57,8 @@
     owl-list:rest  owl-list:nil .
 
 :two-int-operation-compose-first
-    rdf:type                           comp-o:ComposablePerform ;
-    comp-o:requiredInterface :int-int-interface ;
+    rdf:type                           comp-o:RequiredPerform ;
+    comp-o:requiredPerformContract :int-int-interface ;
     process:hasDataFrom                [ rdf:type            process:InputBinding ;
                                          process:valueSource [ rdf:type            process:ValueOf ;
                                                                process:theVar      :two-int-operation-input ;
@@ -66,8 +66,8 @@
                                          process:toParam     :on-off-interface-input ] .
 
 :two-int-operation-compose-second
-    rdf:type                           comp-o:ComposablePerform ;
-    comp-o:requiredInterface :int-int-interface ;
+    rdf:type                           comp-o:RequiredPerform ;
+    comp-o:requiredPerformContract :int-int-interface ;
     process:hasDataFrom                [ rdf:type            process:InputBinding ;
                                          process:valueSource [ rdf:type            process:ValueOf ;
                                                                process:theVar      :int-int-interface-output ;

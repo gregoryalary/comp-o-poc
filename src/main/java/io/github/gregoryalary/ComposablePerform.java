@@ -7,9 +7,9 @@ import java.util.*;
 
 public class ComposablePerform extends ManagedResource {
 
-    private final ComposableService parentService;
+    private final ComponentBasedService parentService;
 
-    public ComposablePerform(Resource resource, ComposableService parentService) {
+    public ComposablePerform(Resource resource, ComponentBasedService parentService) {
         super(resource);
         this.parentService = parentService;
     }
@@ -30,9 +30,9 @@ public class ComposablePerform extends ManagedResource {
                         "\n" +
                         "SELECT ?interfaceInputUri ?interfaceOutputUri ?serviceInputUri ?serviceOutputUri ?requiredInterface" +
                         "WHERE {" +
-                        "  { <%s> comp-o:requiredInterface/profile:hasInput ?interfaceInputUri . }" +
+                        "  { <%s> comp-o:requiredPerformContract/profile:hasInput ?interfaceInputUri . }" +
                         "  UNION" +
-                        "  { <%s> comp-o:requiredInterface/profile:hasOutput ?interfaceOutputUri . }" +
+                        "  { <%s> comp-o:requiredPerformContract/profile:hasOutput ?interfaceOutputUri . }" +
                         "  UNION" +
                         "  { <%s> service:presents/profile:hasInput ?serviceInputUri . }" +
                         "  UNION" +
@@ -89,7 +89,7 @@ public class ComposablePerform extends ManagedResource {
                         "\n" +
                         "SELECT ?precondition\n" +
                         "WHERE {\n" +
-                        "   <%s> comp-o:requiredInterface/profile:hasPrecondition ?precondition .\n" +
+                        "   <%s> comp-o:requiredPerformContract/profile:hasPrecondition ?precondition .\n" +
                         "}"
                 , getURI()));
         for (ResultSet results = QueryExecutionFactory.create(query, ServiceEnvironment.getModel()).execSelect(); results.hasNext(); ) {
@@ -110,7 +110,7 @@ public class ComposablePerform extends ManagedResource {
                 "PREFIX comp-o: <https://gregoryalary.github.io/comp-o#>\n" +
                         "SELECT ?interface\n" +
                         "WHERE {\n" +
-                        "  <%s> comp-o:requiredInterface ?interface .\n" +
+                        "  <%s> comp-o:requiredPerformContract ?interface .\n" +
                         "}", getURI()));
         Optional<Service> requiredInterface = Optional.empty();
         ResultSet results = QueryExecutionFactory.create(query, ServiceEnvironment.getModel()).execSelect();
