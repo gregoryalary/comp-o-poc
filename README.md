@@ -10,3 +10,7 @@ Several component-based service descriptions that can be used to test this POC a
 - Listing of the required interfaces of a component-based service
 - Check of the compatibility between a required interface and a service
 - Automatic generation of composite service descriptions
+
+### Acknowledgment
+
+This work is part of the AILP (Assistance InteLligente et proactive en environnement Professionnel) project, which is supported by the French region Occitanie and the operational program FEDER-FSE Midi-Pyrénées et Garonne
